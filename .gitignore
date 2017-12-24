@@ -1,7 +1,8 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # dependencies
-node_modules
+picam-viewer/node_modules
+test-auth0/node_modules
 
 # testing
 coverage
