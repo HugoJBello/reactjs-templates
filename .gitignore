@@ -2,6 +2,7 @@
 
 # dependencies
 picam-viewer/node_modules
+picam-viewer-back/node_modules
 test-auth0/node_modules
 
 # testing
