@@ -2,6 +2,10 @@ var express = require('express');
 var router = express.Router();
 var mysql = require('mysql');
 var fs = require('fs');
+const jwt = require('express-jwt');
+const jwks = require('jwks-rsa');
+const cors = require('cors');
+const jwtAuthz = require('express-jwt-authz');
 
 var con = mysql.createConnection({
   host: "localhost",
@@ -10,12 +14,27 @@ var con = mysql.createConnection({
   database: "picam_app"
 });
 
-/* GET home page. */
-router.get('/get_list_images', function(req, res, next) {
+var jwtCheck = jwt({
+    secret: jwks.expressJwtSecret({
+        cache: true,
+        rateLimit: true,
+        jwksRequestsPerMinute: 5,
+        jwksUri: "https://cam-viewer-hjbello.eu.auth0.com/.well-known/jwks.json"
+    }),
+    audience: 'picam-viewer-back',
+    issuer: "https://cam-viewer-hjbello.eu.auth0.com/",
+    algorithms: ['RS256']
+});
+const checkScopes = jwtAuthz([ 'read:messages' ]);
+router.use(cors());
+//router.use(jwtCheck);
+//router.use(checkScopes);
+
+
+router.get('/get_list_images',jwtCheck, (req,res) => {
     con.query("SELECT * FROM image", function (err, result, fields) {
       if (err) throw err;
       res.json(result);
-      console.log(result);
     });
 });
 
@@ -23,17 +42,24 @@ router.get('/get_list_images/:limit', function(req, res, next) {
     con.query("SELECT * FROM image order by date_taken limit " + req.params.limit, function (err, result, fields) {
       if (err) throw err;
       res.json(result);
-      console.log(result);
     });
 });
 
-router.get('/images_base64/:limit', function(req, res, next) {
+router.get('/images_base64/limit=:limit', function(req, res, next) {
     con.query("SELECT * FROM image order by date_taken limit " + req.params.limit, function (err, result, fields) {
       if (err) throw err;
       for (var i=0;i<result.length;i++){
-      //  console.log(result[i].path);
         result[i].base64 = base64_encode(result[i].path);
-      //  console.log(result[i].base64);
+      }
+      res.json(result);
+    });
+});
+
+router.get('/images_base64/limit=:limit/skip=:skip', function(req, res, next) {
+    con.query("SELECT * FROM image limit " + req.params.limit + " OFFSET " + req.params.skip, function (err, result, fields) {
+      if (err) throw err;
+      for (var i=0;i<result.length;i++){
+        result[i].base64 = base64_encode(result[i].path);
       }
       res.json(result);
     });

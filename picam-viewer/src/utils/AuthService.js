@@ -7,20 +7,22 @@ const ACCESS_TOKEN_KEY = 'access_token';
 const CLIENT_ID = 'DN4VGn4YJsikf5k87EuJ44lVZi9mBFrh';
 const CLIENT_DOMAIN = 'cam-viewer-hjbello.eu.auth0.com';
 const REDIRECT = 'http://localhost:3000/callback';
-const SCOPE = 'openid';
-const AUDIENCE = 'https://cam-viewer-hjbello.eu.auth0.com/userinfo';
+const SCOPE = 'openid profile read:messages read:images';
+const AUDIENCE = 'picam-viewer-back';
 
 var auth = new auth0.WebAuth({
   clientID: CLIENT_ID,
-  domain: CLIENT_DOMAIN
+  domain: CLIENT_DOMAIN,
+  audience: 'picam-viewer-back',
+  scope: 'openid profile read:messages read:images'
 });
 
 export function login() {
   auth.authorize({
     responseType: 'token id_token',
     redirectUri: REDIRECT,
-    audience: AUDIENCE,
-    scope: SCOPE
+    audience: 'picam-viewer-back',
+    scope: 'openid profile read:messages read:images'
   });
 }
 
@@ -41,6 +43,7 @@ export function getIdToken() {
 }
 
 export function getAccessToken() {
+  console.log("----" + localStorage.getItem(ACCESS_TOKEN_KEY));
   return localStorage.getItem(ACCESS_TOKEN_KEY);
 }
 

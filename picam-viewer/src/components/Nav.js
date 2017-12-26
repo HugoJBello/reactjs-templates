@@ -9,7 +9,7 @@ class Nav extends Component {
     return (
       <nav className="navbar navbar-default">
         <div className="navbar-header">
-          <Link className="navbar-brand" to="/">Cam Viewer</Link>
+          <Link className="navbar-brand" to="/">Home</Link>
         </div>
         <ul className="nav navbar-nav">
           <li>
@@ -17,7 +17,7 @@ class Nav extends Component {
           </li>
           <li>
             {
-             ( isLoggedIn() ) ? <Link to="/special">Tab2</Link> :  ''
+             ( isLoggedIn() ) ? <Link to="/special">Cam Viewer</Link> :  ''
             }
           </li>
         </ul>
