@@ -43,7 +43,6 @@ export function getIdToken() {
 }
 
 export function getAccessToken() {
-  console.log("----" + localStorage.getItem(ACCESS_TOKEN_KEY));
   return localStorage.getItem(ACCESS_TOKEN_KEY);
 }
 

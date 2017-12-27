@@ -1,8 +1,24 @@
+@import "image-gallery.css";
 .navbar-right { margin-right: 0px !important}
 .log {
   margin: 5px 10px 0 0;
 }
-img {
-    width: 100%;
+.imageContainer {
+    width: 50%;
     height: auto;
+    margin-right: auto;
+    margin-left: auto;
 }
+.rightMenu{
+    width:200px;
+    height:400px;
+    float:left;
+    padding:10px;
+    margin-left:30px;
+    margin-top:50px;
+    font-size: 90%;
+}
+/* .image-gallery-image img {
+  width: 50%;
+  height: 50%;
+} */

@@ -40,14 +40,20 @@ router.get('/get_list_images',jwtCheck, (req,res) => {
 
 router.get('/get_list_images/:limit', function(req, res, next) {
     con.query("SELECT * FROM image order by date_taken limit " + req.params.limit, function (err, result, fields) {
-      if (err) throw err;
+      if (err) {
+        console.log(err);
+        console.log("error in mysql");
+      };
       res.json(result);
     });
 });
 
 router.get('/images_base64/limit=:limit', function(req, res, next) {
     con.query("SELECT * FROM image order by date_taken limit " + req.params.limit, function (err, result, fields) {
-      if (err) throw err;
+      if (err) {
+        console.log(err);
+        console.log("error in mysql");
+      };
       for (var i=0;i<result.length;i++){
         result[i].base64 = base64_encode(result[i].path);
       }
@@ -56,13 +62,20 @@ router.get('/images_base64/limit=:limit', function(req, res, next) {
 });
 
 router.get('/images_base64/limit=:limit/skip=:skip', function(req, res, next) {
-    con.query("SELECT * FROM image limit " + req.params.limit + " OFFSET " + req.params.skip, function (err, result, fields) {
-      if (err) throw err;
-      for (var i=0;i<result.length;i++){
-        result[i].base64 = base64_encode(result[i].path);
-      }
-      res.json(result);
-    });
+    if(req.params.limit && req.params.skip){
+      con.query("SELECT * FROM image limit " + req.params.limit + " OFFSET " + req.params.skip, function (err, result, fields) {
+        if (err) {
+          console.log(err);
+          console.log("error in mysql");
+        };
+        for (var i=0;i<result.length;i++){
+          result[i].base64 = base64_encode(result[i].path);
+        }
+        res.json(result);
+      });
+   } else {
+     res.json(null);
+   }
 });
 
 // function to encode file data to base64 encoded string
