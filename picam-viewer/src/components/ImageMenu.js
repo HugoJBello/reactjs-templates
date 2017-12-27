@@ -25,17 +25,15 @@ class ImageMenu extends Component {
   render() {
      return (
         <div>
-          <div className="rightMenu">
-            <div id="recieve_last40">
-              <a onClick={() => {this.getLastImages()}}>Show last 40 images </a>
-            </div>
-            <div id="query_images">
-              <a onClick={() => {this.queryImages(2,0)}}>Show last 40 images </a>
-            </div>
-          </div>
-
-          <ImageDisplayer images={this.state.images}/>
+        <div className="rightMenu">
+          <h3>Query Images</h3>
+            <ul>
+              <li><a onClick={() => {this.getLastImages()}}>Show last 40 images </a></li>
+              <li><a onClick={() => {this.queryImages(2,0)}}>Show last 40 images </a></li>
+            </ul>
         </div>
+        <ImageDisplayer images={this.state.images}/>
+      </div>
     );
   }
 }

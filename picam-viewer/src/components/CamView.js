@@ -28,9 +28,7 @@ class CamView extends Component {
     return (
       <div>
         <Nav />
-        <h3 className="text-center">Images</h3>
         <ImageMenu/>
-        // <ImageDisplayer images={this.state.images} />
         </div>
     );
   }
