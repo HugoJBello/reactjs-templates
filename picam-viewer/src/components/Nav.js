@@ -7,11 +7,17 @@ class Nav extends Component {
 
   render() {
     return (
-      <nav className="navbar navbar-default">
+      <div className="sidebar-nav">
+      <div className="navbar navbar-default navbar-fixed-top">
+      <button type="button" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" class="navbar-toggle">
+        <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span>
+        <span class="icon-bar"></span><span class="icon-bar"></span>
+      </button>
         <div className="navbar-header">
           <Link className="navbar-brand" to="/">Home</Link>
         </div>
-        <ul className="nav navbar-nav">
+        <div id="bs-example-navbar-collapse-1" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
           <li>
             <Link to="/">Home</Link>
           </li>
@@ -28,7 +34,9 @@ class Nav extends Component {
            }
           </li>
         </ul>
-      </nav>
+        </div>
+        </div>
+      </div>
     );
   }
 }

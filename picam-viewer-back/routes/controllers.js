@@ -78,6 +78,40 @@ router.get('/images_base64/limit=:limit/skip=:skip', function(req, res, next) {
    }
 });
 
+router.get('/images_base64_date/limit=:limit/skip=:skip/day=:day', function(req, res, next) {
+    if(req.params.limit && req.params.skip && req.params.day){
+      con.query("SELECT * FROM image where date_taken = "+ req.params.day + " limit " + req.params.limit + " OFFSET " + req.params.skip, function (err, result, fields) {
+        if (err) {
+          console.log(err);
+          console.log("error in mysql");
+        };
+        for (var i=0;i<result.length;i++){
+          result[i].base64 = base64_encode(result[i].path);
+        }
+        res.json(result);
+      });
+   } else {
+     res.json(null);
+   }
+});
+
+router.get('/images_base64_today/limit=:limit/skip=:skip', function(req, res, next) {
+    if(req.params.limit && req.params.skip){
+      con.query("SELECT * FROM image where date_taken = curdate() limit " +req.params.limit + " OFFSET " + req.params.skip, function (err, result, fields) {
+        if (err) {
+          console.log(err);
+          console.log("error in mysql");
+        };
+        for (var i=0;i<result.length;i++){
+          result[i].base64 = base64_encode(result[i].path);
+        }
+        res.json(result);
+      });
+   } else {
+     res.json(null);
+   }
+});
+
 // function to encode file data to base64 encoded string
 function base64_encode(file) {
     // read binary data
