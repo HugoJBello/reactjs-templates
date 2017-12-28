@@ -50,17 +50,26 @@ class ImageMenu extends Component {
               <li className="list-group-item"><a onClick={() => {this.getLastImages()}}>Show last 40 images </a></li>
               <li className="list-group-item">
               <form onSubmit={this.handleSubmit}>
-              <label>
-              Show last
-              <select value={this.state.limit} name="numberImages" onChange={this.handleChange}>
-                <option value="1">1</option>
-                <option value="10">10</option>
-                <option value="20">20</option>
-                <option value="30">30</option>
-                <option value="100">100</option>
-              </select> images
+              <table>
+              <tr>
+                <th>Show last &ensp;</th>
+                <th><select value={this.state.limit} name="numberImages" onChange={this.handleChange}>
+                    <option value="1">1</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                    <option value="100">100</option>
+                    </select>
+                </th>
+              </tr>
+              <tr>
+                <th>date here &ensp;
+                </th>
+                <th>date selector here
+                </th>
+              </tr>
+              </table>
               <input type="submit" className="btn btn-info" value="Submit" />
-              </label>
               </form></li>
             </ul>
         </div>
