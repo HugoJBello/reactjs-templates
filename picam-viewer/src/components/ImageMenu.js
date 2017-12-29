@@ -1,5 +1,5 @@
 import React,{ Component } from 'react';
-import { last_images_base64,getListImages, queryImagesBase64 } from '../utils/image-backend-caller';
+import { last_images_base64,getListImages, queryImagesBase64, queryImagesBase64Today } from '../utils/image-backend-caller';
 import ImageDisplayer from './ImageDisplayer';
 
 class ImageMenu extends Component {
@@ -8,11 +8,14 @@ class ImageMenu extends Component {
     this.state = { images: [],
                   limit: 10,
                   skip: 0,
-                  date: ""};
+                  date: "anyday"};
     this.getLastImages();
     this.getLastImages = this.getLastImages.bind(this);
     this.queryImages = this.queryImages.bind(this);
+    this.queryImagesToday = this.queryImagesToday.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleChangeDate = this.handleChangeDate.bind(this);
+    this.handleChangeDate = this.handleChangeDate.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -21,10 +24,19 @@ class ImageMenu extends Component {
     console.log(event)
     //event.preventDefault();
   }
+  handleChangeDate(event) {
+    this.setState({ date:event.target.value });
+    console.log(event)
+    //event.preventDefault();
+  }
 
   handleSubmit(event) {
     event.preventDefault()
-    this.queryImages();
+    if (this.state.date=="today"){
+      this.queryImagesToday()
+    } else {
+      this.queryImages();
+    }
   }
 
   getLastImages() {
@@ -35,6 +47,11 @@ class ImageMenu extends Component {
 
   queryImages() {
     queryImagesBase64(this.state.limit,this.state.skip).then((images) => {
+      this.setState({ images:images });
+    });
+  }
+  queryImagesToday() {
+    queryImagesBase64Today(this.state.limit,this.state.skip).then((images) => {
       this.setState({ images:images });
     });
   }
@@ -52,7 +69,7 @@ class ImageMenu extends Component {
               <form onSubmit={this.handleSubmit}>
               <table>
               <tr>
-                <th>Show last &ensp;</th>
+                <th>Only last &ensp;</th>
                 <th><select value={this.state.limit} name="numberImages" onChange={this.handleChange}>
                     <option value="1">1</option>
                     <option value="10">10</option>
@@ -63,9 +80,12 @@ class ImageMenu extends Component {
                 </th>
               </tr>
               <tr>
-                <th>date here &ensp;
+                <th>Only from &ensp;
                 </th>
-                <th>date selector here
+                <th><select value={this.state.date} name="numberImages" onChange={this.handleChangeDate}>
+                    <option value="anyday">anyday</option>
+                    <option value="today">today</option>
+                    </select>
                 </th>
               </tr>
               </table>
