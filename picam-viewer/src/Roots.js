@@ -7,7 +7,7 @@ import Callback from './components/Callback';
 import { Router, Route, browserHistory } from 'react-router';
 import { requireAuth } from './utils/AuthService';
 
-class App extends Component {
+class Roots extends Component {
 
   constructor() {
     super()
@@ -26,4 +26,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default Roots;

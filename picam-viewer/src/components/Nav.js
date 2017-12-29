@@ -10,14 +10,14 @@ class Nav extends Component {
       <div className="sidebar-nav">
       <div className="navbar navbar-default navbar-fixed-top">
       <button type="button" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" class="navbar-toggle">
-        <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span>
-        <span class="icon-bar"></span><span class="icon-bar"></span>
+        <span className="sr-only">Toggle navigation</span><span class="icon-bar"></span>
+        <span className="icon-bar"></span><span class="icon-bar"></span>
       </button>
         <div className="navbar-header">
           <Link className="navbar-brand" to="/">Home</Link>
         </div>
         <div id="bs-example-navbar-collapse-1" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
+          <ul className="nav navbar-nav">
           <li>
             <Link to="/">Home</Link>
           </li>

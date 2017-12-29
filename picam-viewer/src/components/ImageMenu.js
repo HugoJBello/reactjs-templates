@@ -13,13 +13,13 @@ class ImageMenu extends Component {
     this.getLastImages = this.getLastImages.bind(this);
     this.queryImages = this.queryImages.bind(this);
     this.queryImagesToday = this.queryImagesToday.bind(this);
-    this.handleChange = this.handleChange.bind(this);
+    this.handleChangeLimit = this.handleChangeLimit.bind(this);
     this.handleChangeDate = this.handleChangeDate.bind(this);
     this.handleChangeDate = this.handleChangeDate.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(event) {
+  handleChangeLimit(event) {
     this.setState({ limit:event.target.value });
     console.log(event)
     //event.preventDefault();
@@ -70,7 +70,7 @@ class ImageMenu extends Component {
               <table>
               <tr>
                 <th>Only last &ensp;</th>
-                <th><select value={this.state.limit} name="numberImages" onChange={this.handleChange}>
+                <th><select value={this.state.limit} name="numberImages" onChange={this.handleChangeLimit}>
                     <option value="1">1</option>
                     <option value="10">10</option>
                     <option value="20">20</option>
