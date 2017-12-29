@@ -27,8 +27,8 @@ var jwtCheck = jwt({
 });
 const checkScopes = jwtAuthz([ 'read:messages' ]);
 router.use(cors());
-//router.use(jwtCheck);
-//router.use(checkScopes);
+router.use(jwtCheck);
+router.use(checkScopes);
 
 
 router.get('/get_list_images',jwtCheck, (req,res) => {
