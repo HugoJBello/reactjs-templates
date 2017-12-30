@@ -1,8 +1,8 @@
 import React,{ Component } from 'react';
 import { last_images_base64,getListImages, queryImagesBase64, queryImagesBase64Today, queryImagesBase64Date } from '../utils/image-backend-caller';
 import ImageDisplayer from './ImageDisplayer';
+import DateSelector from './DateSelector';
 import DatePicker from 'react-datepicker';
-import dateFormat from 'dateformat'
 var moment = require('moment');
 require('react-datepicker/dist/react-datepicker.css');
 
@@ -13,8 +13,10 @@ class ImageMenu extends Component {
                   limit: 10,
                   skip: 0,
                   date: moment(),
+                  dateSelection:"anyday",
+                  showPicker:false,
                   dateFormated: (new Date()).getTime()
-};
+                };
     this.getLastImages();
     this.getLastImages = this.getLastImages.bind(this);
     this.queryImages = this.queryImages.bind(this);
@@ -38,19 +40,20 @@ class ImageMenu extends Component {
     console.log(event)
     //event.preventDefault();
   }
+
   handleChangeDate(event) {
-    var dateSelector = event.target.value;
-    var result =new Date();
-    if (dateSelector!="today"){
-      result=null;
+    event.preventDefault();
+    this.setState({ dateSelection:event.target.value });
+    if (event.target.value!="anyday"){
+      this.setState({ showPicker:true });
+    } else {
+      this.setState({ showPicker:false });
     }
-    this.setState({ date:result });
-    //event.preventDefault();
   }
 
   handleSubmit(event) {
     event.preventDefault()
-    if (this.state.date!=null){
+    if (this.state.dateSelection !="anyday"){
       this.queryImagesDate()
     } else {
       this.queryImages();
@@ -105,10 +108,12 @@ class ImageMenu extends Component {
               <tr>
                 <th>Only from &ensp;
                 </th>
-                <th><DatePicker
-                onChange={this.handleChangeDatePicker}
-                selected={this.state.date}
-                />
+                <th>
+                  <DateSelector dateSelection={this.state.dateSelection} handler = {this.handleChangeDate} />
+                  { this.state.showPicker ?  <DatePicker
+                                                  onChange={this.handleChangeDatePicker}
+                                                  selected={this.state.date}
+                                                  /> : null }
                 </th>
               </tr>
               </table>
