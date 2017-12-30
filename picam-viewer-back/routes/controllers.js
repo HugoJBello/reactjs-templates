@@ -27,8 +27,8 @@ var jwtCheck = jwt({
 });
 const checkScopes = jwtAuthz([ 'read:messages' ]);
 router.use(cors());
-router.use(jwtCheck);
-router.use(checkScopes);
+ router.use(jwtCheck);
+ router.use(checkScopes);
 
 
 router.get('/get_list_images',jwtCheck, (req,res) => {
@@ -78,13 +78,10 @@ router.get('/images_base64/limit=:limit/skip=:skip', function(req, res, next) {
    }
 });
 
-router.get('/images_base64_date/limit=:limit/skip=:skip/day=:day', function(req, res, next) {
-    if(req.params.limit && req.params.skip && req.params.day){
-      con.query("SELECT * FROM image where date_taken = "+ req.params.day + " limit " + req.params.limit + " OFFSET " + req.params.skip, function (err, result, fields) {
-        if (err) {
-          console.log(err);
-          console.log("error in mysql");
-        };
+router.get('/images_base64_date/limit=:limit/skip=:skip/day=:day', function(req, res) {
+    if(req.params.limit &&  req.params.day){
+      con.query('SELECT * FROM image where date_taken = "'+ req.params.day +'" limit ' + req.params.limit + " OFFSET " + req.params.skip, function (err, result, fields) {
+        if (err) throw err;
         for (var i=0;i<result.length;i++){
           result[i].base64 = base64_encode(result[i].path);
         }

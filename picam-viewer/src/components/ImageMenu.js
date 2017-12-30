@@ -1,6 +1,10 @@
 import React,{ Component } from 'react';
-import { last_images_base64,getListImages, queryImagesBase64, queryImagesBase64Today } from '../utils/image-backend-caller';
+import { last_images_base64,getListImages, queryImagesBase64, queryImagesBase64Today, queryImagesBase64Date } from '../utils/image-backend-caller';
 import ImageDisplayer from './ImageDisplayer';
+import DatePicker from 'react-datepicker';
+import dateFormat from 'dateformat'
+var moment = require('moment');
+require('react-datepicker/dist/react-datepicker.css');
 
 class ImageMenu extends Component {
   constructor() {
@@ -8,15 +12,25 @@ class ImageMenu extends Component {
     this.state = { images: [],
                   limit: 10,
                   skip: 0,
-                  date: "anyday"};
+                  date: moment(),
+                  dateFormated: (new Date()).getTime()
+};
     this.getLastImages();
     this.getLastImages = this.getLastImages.bind(this);
     this.queryImages = this.queryImages.bind(this);
     this.queryImagesToday = this.queryImagesToday.bind(this);
+    this.queryImagesDate = this.queryImagesDate.bind(this);
     this.handleChangeLimit = this.handleChangeLimit.bind(this);
     this.handleChangeDate = this.handleChangeDate.bind(this);
-    this.handleChangeDate = this.handleChangeDate.bind(this);
+    this.handleChangeDatePicker = this.handleChangeDatePicker.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChangeDatePicker(date) {
+    var dateMiliseconds = date.toDate();
+    var dateFormated = dateMiliseconds.getFullYear() + '-' +(dateMiliseconds.getMonth() + 1) + '-' +  dateMiliseconds.getDate();
+    this.setState({ dateFormated: dateFormated });
+    this.setState({date});
   }
 
   handleChangeLimit(event) {
@@ -25,15 +39,19 @@ class ImageMenu extends Component {
     //event.preventDefault();
   }
   handleChangeDate(event) {
-    this.setState({ date:event.target.value });
-    console.log(event)
+    var dateSelector = event.target.value;
+    var result =new Date();
+    if (dateSelector!="today"){
+      result=null;
+    }
+    this.setState({ date:result });
     //event.preventDefault();
   }
 
   handleSubmit(event) {
     event.preventDefault()
-    if (this.state.date=="today"){
-      this.queryImagesToday()
+    if (this.state.date!=null){
+      this.queryImagesDate()
     } else {
       this.queryImages();
     }
@@ -52,6 +70,11 @@ class ImageMenu extends Component {
   }
   queryImagesToday() {
     queryImagesBase64Today(this.state.limit,this.state.skip).then((images) => {
+      this.setState({ images:images });
+    });
+  }
+  queryImagesDate() {
+    queryImagesBase64Date(this.state.limit,this.state.skip,this.state.dateFormated).then((images) => {
       this.setState({ images:images });
     });
   }
@@ -82,15 +105,16 @@ class ImageMenu extends Component {
               <tr>
                 <th>Only from &ensp;
                 </th>
-                <th><select value={this.state.date} name="numberImages" onChange={this.handleChangeDate}>
-                    <option value="anyday">anyday</option>
-                    <option value="today">today</option>
-                    </select>
+                <th><DatePicker
+                onChange={this.handleChangeDatePicker}
+                selected={this.state.date}
+                />
                 </th>
               </tr>
               </table>
               <input type="submit" className="btn btn-info" value="Submit" />
-              </form></li>
+              </form>
+              </li>
             </ul>
         </div>
         <ImageDisplayer images={this.state.images}/>

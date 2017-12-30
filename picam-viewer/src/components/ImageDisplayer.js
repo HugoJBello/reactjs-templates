@@ -16,7 +16,8 @@ class ImageDisplayer extends Component {
     const restResponseImages = this.props.images;
     const images = [];
     for (var i=0; i<restResponseImages.length;i++){
-       var imageEntry ={original:"data:image/png;base64,"+restResponseImages[i].base64}
+       var imageEntry ={original:"data:image/png;base64,"+restResponseImages[i].base64,
+                        originalTitle:restResponseImages[i].filename}
        images.push(imageEntry);
     }
     this.state.imagesBase64=images;
