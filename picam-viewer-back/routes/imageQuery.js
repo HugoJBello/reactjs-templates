@@ -2,10 +2,6 @@ var express = require('express');
 var router = express.Router();
 var mysql = require('mysql');
 var fs = require('fs');
-const jwt = require('express-jwt');
-const jwks = require('jwks-rsa');
-const cors = require('cors');
-const jwtAuthz = require('express-jwt-authz');
 
 var con = mysql.createConnection({
   host: "localhost",
@@ -14,24 +10,7 @@ var con = mysql.createConnection({
   database: "picam_app"
 });
 
-var jwtCheck = jwt({
-    secret: jwks.expressJwtSecret({
-        cache: true,
-        rateLimit: true,
-        jwksRequestsPerMinute: 5,
-        jwksUri: "https://cam-viewer-hjbello.eu.auth0.com/.well-known/jwks.json"
-    }),
-    audience: 'picam-viewer-back',
-    issuer: "https://cam-viewer-hjbello.eu.auth0.com/",
-    algorithms: ['RS256']
-});
-const checkScopes = jwtAuthz([ 'read:messages' ]);
-router.use(cors());
- router.use(jwtCheck);
- router.use(checkScopes);
-
-
-router.get('/get_list_images',jwtCheck, (req,res) => {
+router.get('/get_list_images',(req,res) => {
     con.query("SELECT * FROM image", function (err, result, fields) {
       if (err) throw err;
       res.json(result);

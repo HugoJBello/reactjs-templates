@@ -1,9 +1,9 @@
 import React,{ Component } from 'react';
-import { last_images_base64,getListImages, queryImagesBase64, queryImagesBase64Today, queryImagesBase64Date } from '../utils/image-backend-caller';
+import { last_images_base64,getListImages, queryImagesBase64,
+  queryImagesBase64Today, queryImagesBase64Date, queryImagesBase64DatePaged, queryImagesBase64Paged } from '../utils/image-backend-caller';
 import ImageDisplayer from './ImageDisplayer';
 import DateSelector from './DateSelector';
 import DatePicker from 'react-datepicker';
-
 var moment = require('moment');
 
 require('react-datepicker/dist/react-datepicker.css');
@@ -17,6 +17,11 @@ class ImageMenu extends Component {
                   date: moment(),
                   queryMode:"anyday",
                   showPicker:false,
+                  pagedSearch:false,
+                  numberOfPages:null,
+                  numberOfItems:null,
+                  entriesPerPage:null,
+                  page:1,
                   dateFormated: this.formatDate(moment())
                 };
     this.queryImages();
@@ -24,6 +29,7 @@ class ImageMenu extends Component {
     this.queryImagesDate = this.queryImagesDate.bind(this);
     this.handleChangeLimit = this.handleChangeLimit.bind(this);
     this.handleQueryMode = this.handleQueryMode.bind(this);
+    this.handleChangePage = this.handleChangePage.bind(this);
     this.handleChangeDatePicker = this.handleChangeDatePicker.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -39,13 +45,14 @@ class ImageMenu extends Component {
   }
 
   handleChangeLimit(event) {
-    this.setState({ limit:event.target.value });
+    this.setState({ limit:event.target.value,
+                    pagedSearch: (event.target.value=='all')});
     //event.preventDefault();
   }
 
   handleQueryMode(event) {
     event.preventDefault();
-    this.setState({ dateSelection:event.target.value });
+    this.setState({ queryMode:event.target.value });
     if (event.target.value!=="anyday"){
       this.setState({ showPicker:true });
     } else {
@@ -53,13 +60,30 @@ class ImageMenu extends Component {
     }
   }
 
+  handleChangePage(pageNumber) {
+    this.setState({ page:pageNumber }, function() {
+      if (this.state.queryMode=="anyday"){
+        this.queryImagesPaged();
+      } else {
+        this.queryImagesDatePaged();
+      }
+    });
+  }
+
   handleSubmit(event) {
     event.preventDefault();
-    console.log("here  "+this.state.queryMode );
-    if (this.state.queryMode !=="anyday"){
-      this.queryImagesDate();
+    if (this.state.queryMode =="anyday"){
+      if(this.state.pagedSearch){
+        this.queryImagesPaged();
+      }else{
+        this.queryImages();
+      }
     } else {
-      this.queryImages();
+      if(this.state.pagedSearch){
+        this.queryImagesDatePaged();
+      } else{
+        this.queryImagesDate();
+      }
     }
   }
 
@@ -72,6 +96,23 @@ class ImageMenu extends Component {
   queryImagesDate() {
     queryImagesBase64Date(this.state.limit,this.state.skip,this.state.dateFormated).then((images) => {
       this.setState({ images:images });
+    });
+  }
+
+  queryImagesDatePaged() {
+    queryImagesBase64DatePaged(this.state.page,this.state.dateFormated).then((response) => {
+      this.setState({ images:response.images,
+                      numberOfPages:response.numberOfPages,
+                      numberOfItems:response.numberOfItems,
+                      entriesPerPage:response.entriesPerPage });
+    });
+  }
+  queryImagesPaged() {
+    queryImagesBase64Paged(this.state.page).then((response) => {
+      this.setState({ images:response.images,
+                      numberOfPages:response.numberOfPages,
+                      numberOfItems:response.numberOfItems,
+                      entriesPerPage:response.entriesPerPage });
     });
   }
 
@@ -94,7 +135,7 @@ class ImageMenu extends Component {
                     <option value="10">10</option>
                     <option value="20">20</option>
                     <option value="30">30</option>
-                    <option value="100">100</option>
+                    <option value="all">all</option>
                     </select>
                 </td>
               </tr>
@@ -117,8 +158,9 @@ class ImageMenu extends Component {
             </ul>
         </div>
 
-        <ImageDisplayer images={this.state.images}/>
-
+        <ImageDisplayer images={this.state.images}
+                        showPager={this.state.pagedSearch} numberOfItems={this.state.numberOfItems}
+                        entriesPerPage={this.state.entriesPerPage} activePage={this.state.page} handler={this.handleChangePage}/>
       </div>
     );
   }

@@ -3,7 +3,8 @@ import { last_images_base64,getListImages } from '../utils/image-backend-caller'
 import ImageGallery from 'react-image-gallery';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import ImageList from './ImageList';
-
+import Pagination from 'react-js-pagination';
+ 
 require('react-tabs/style/react-tabs.css');
 
 class ImageDisplayer extends Component {
@@ -13,7 +14,7 @@ class ImageDisplayer extends Component {
                   showGallery: false};
   }
 
-  
+
   extractBase64 = ()=>{
     const restResponseImages = this.props.images;
     const images = [];
@@ -44,6 +45,13 @@ class ImageDisplayer extends Component {
             <ImageList images={this.props.images}/>
           </TabPanel>
         </Tabs>
+          { (this.props.showPager) ? <Pagination
+                                    activePage={this.props.activePage}
+                                    itemsCountPerPage={this.props.entriesPerPage}
+                                    totalItemsCount={this.props.numberOfItems}
+                                    pageRangeDisplayed={5}
+                                    onChange={this.props.handler}
+                                  />: null}
         </div>
     );
   }
