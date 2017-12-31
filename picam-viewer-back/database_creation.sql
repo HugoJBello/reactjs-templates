@@ -14,6 +14,8 @@ insert into image values (sysdate(),"C:/Users/hugo/3.jpeg","3.jpeg");
 insert into image values (sysdate(),"C:/Users/hugo/kitty-cat-kitten-pet-45201.jpeg","kitty-cat-kitten-pet-45201.jpeg");
 insert into image values (sysdate(),"C:/Users/hugo/kitty-cat-kitten-pet-45201.jpeg","kitty-cat-kitten-pet-45201.jpeg");
 
-select * from image
-order by date_taken desc
-LIMIT 5;
+# select * from image
+# order by date_taken desc
+# LIMIT 5;
+
+# select * from image where date_taken = "2017-12-28" limit 3;

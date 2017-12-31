@@ -3,7 +3,9 @@ import { last_images_base64,getListImages, queryImagesBase64, queryImagesBase64T
 import ImageDisplayer from './ImageDisplayer';
 import DateSelector from './DateSelector';
 import DatePicker from 'react-datepicker';
+
 var moment = require('moment');
+
 require('react-datepicker/dist/react-datepicker.css');
 
 class ImageMenu extends Component {
@@ -94,35 +96,39 @@ class ImageMenu extends Component {
               <li className="list-group-item">
               <form onSubmit={this.handleSubmit}>
               <table>
+              <tbody>
               <tr>
-                <th>Only last &ensp;</th>
-                <th><select value={this.state.limit} name="numberImages" onChange={this.handleChangeLimit}>
+                <td>Only last &ensp;</td>
+                <td><select value={this.state.limit} name="numberImages" onChange={this.handleChangeLimit}>
                     <option value="1">1</option>
                     <option value="10">10</option>
                     <option value="20">20</option>
                     <option value="30">30</option>
                     <option value="100">100</option>
                     </select>
-                </th>
+                </td>
               </tr>
               <tr>
-                <th>Only from &ensp;
-                </th>
-                <th>
+                <td>Only from &ensp;
+                </td>
+                <td>
                   <DateSelector dateSelection={this.state.dateSelection} handler = {this.handleChangeDate} />
                   { this.state.showPicker ?  <DatePicker
                                                   onChange={this.handleChangeDatePicker}
                                                   selected={this.state.date}
                                                   /> : null }
-                </th>
+                </td>
               </tr>
+              </tbody>
               </table>
               <input type="submit" className="btn btn-info" value="Submit" />
               </form>
               </li>
             </ul>
         </div>
+
         <ImageDisplayer images={this.state.images}/>
+
       </div>
     );
   }
