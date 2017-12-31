@@ -6,9 +6,8 @@ class ImageList extends Component {
     super();
   }
   renderRow(props) {
-      console.log(props);
       return (
-        <tr>
+        <tr key={props.id}>
           <td>{ props.filename }</td>
           <td>{ props.path }</td>
           <td>{ props.date_taken }</td>

@@ -12,41 +12,41 @@ class ImageMenu extends Component {
   constructor() {
     super();
     this.state = { images: [],
-                  limit: 10,
+                  limit: 30,
                   skip: 0,
                   date: moment(),
-                  dateSelection:"anyday",
+                  queryMode:"anyday",
                   showPicker:false,
-                  dateFormated: (new Date()).getTime()
+                  dateFormated: this.formatDate(moment())
                 };
-    this.getLastImages();
-    this.getLastImages = this.getLastImages.bind(this);
+    this.queryImages();
     this.queryImages = this.queryImages.bind(this);
-    this.queryImagesToday = this.queryImagesToday.bind(this);
     this.queryImagesDate = this.queryImagesDate.bind(this);
     this.handleChangeLimit = this.handleChangeLimit.bind(this);
-    this.handleChangeDate = this.handleChangeDate.bind(this);
+    this.handleQueryMode = this.handleQueryMode.bind(this);
     this.handleChangeDatePicker = this.handleChangeDatePicker.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleChangeDatePicker(date) {
-    var dateMiliseconds = date.toDate();
-    var dateFormated = dateMiliseconds.getFullYear() + '-' +(dateMiliseconds.getMonth() + 1) + '-' +  dateMiliseconds.getDate();
-    this.setState({ dateFormated: dateFormated });
-    this.setState({date});
+      this.setState({ dateFormated: this.formatDate(date) });
+      this.setState({date});
+    }
+
+  formatDate = (moment) => {
+    var dateMiliseconds = moment.toDate();
+    return dateMiliseconds.getFullYear() + '-' +(dateMiliseconds.getMonth() + 1) + '-' +  dateMiliseconds.getDate();
   }
 
   handleChangeLimit(event) {
     this.setState({ limit:event.target.value });
-    console.log(event)
     //event.preventDefault();
   }
 
-  handleChangeDate(event) {
+  handleQueryMode(event) {
     event.preventDefault();
     this.setState({ dateSelection:event.target.value });
-    if (event.target.value!="anyday"){
+    if (event.target.value!=="anyday"){
       this.setState({ showPicker:true });
     } else {
       this.setState({ showPicker:false });
@@ -54,18 +54,13 @@ class ImageMenu extends Component {
   }
 
   handleSubmit(event) {
-    event.preventDefault()
-    if (this.state.dateSelection !="anyday"){
-      this.queryImagesDate()
+    event.preventDefault();
+    console.log("here  "+this.state.queryMode );
+    if (this.state.queryMode !=="anyday"){
+      this.queryImagesDate();
     } else {
       this.queryImages();
     }
-  }
-
-  getLastImages() {
-    last_images_base64().then((images) => {
-      this.setState({ images:images });
-    });
   }
 
   queryImages() {
@@ -73,11 +68,7 @@ class ImageMenu extends Component {
       this.setState({ images:images });
     });
   }
-  queryImagesToday() {
-    queryImagesBase64Today(this.state.limit,this.state.skip).then((images) => {
-      this.setState({ images:images });
-    });
-  }
+
   queryImagesDate() {
     queryImagesBase64Date(this.state.limit,this.state.skip,this.state.dateFormated).then((images) => {
       this.setState({ images:images });
@@ -92,7 +83,6 @@ class ImageMenu extends Component {
             <h4>Query Images</h4>
           </div>
             <ul className="list-group">
-              <li className="list-group-item"><a onClick={() => {this.getLastImages()}}>Show last 40 images </a></li>
               <li className="list-group-item">
               <form onSubmit={this.handleSubmit}>
               <table>
@@ -112,9 +102,9 @@ class ImageMenu extends Component {
                 <td>Only from &ensp;
                 </td>
                 <td>
-                  <DateSelector dateSelection={this.state.dateSelection} handler = {this.handleChangeDate} />
+                  <DateSelector dateSelection={this.state.queryMode} handler = {this.handleQueryMode} />
                   { this.state.showPicker ?  <DatePicker
-                                                  onChange={this.handleChangeDatePicker}
+                                                  onChange={(date) => this.handleChangeDatePicker(date)}
                                                   selected={this.state.date}
                                                   /> : null }
                 </td>

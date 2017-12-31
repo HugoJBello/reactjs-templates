@@ -9,13 +9,11 @@ require('react-tabs/style/react-tabs.css');
 class ImageDisplayer extends Component {
   constructor(props){
     super(props);
-    this.state = {imagesBase64: []}
+    this.state = {imagesBase64: [],
+                  showGallery: false};
   }
 
-  componentDidMount() {
-      this.extractBase64();
-  }
-
+  
   extractBase64 = ()=>{
     const restResponseImages = this.props.images;
     const images = [];
@@ -28,6 +26,9 @@ class ImageDisplayer extends Component {
   }
 
   render() {
+    if (this.props.loading) {
+      return <div>loading ...</div>;
+    } else {
     this.extractBase64();
     return (
         <div className="imageContainer">
@@ -37,7 +38,7 @@ class ImageDisplayer extends Component {
             <Tab>List</Tab>
           </TabList>
           <TabPanel>
-            <ImageGallery items={this.state.imagesBase64} />
+            { (this.props.images.length>0) ? <ImageGallery items={this.state.imagesBase64} /> : null }
           </TabPanel>
           <TabPanel>
             <ImageList images={this.props.images}/>
@@ -46,5 +47,6 @@ class ImageDisplayer extends Component {
         </div>
     );
   }
+}
 }
 export default ImageDisplayer;
