@@ -4,7 +4,7 @@ import ImageGallery from 'react-image-gallery';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import ImageList from './ImageList';
 import Pagination from 'react-js-pagination';
- 
+
 require('react-tabs/style/react-tabs.css');
 
 class ImageDisplayer extends Component {

@@ -2,8 +2,7 @@ import React,{ Component } from 'react';
 import { last_images_base64,getListImages, queryImagesBase64,
   queryImagesBase64Today, queryImagesBase64Date, queryImagesBase64DatePaged, queryImagesBase64Paged } from '../utils/image-backend-caller';
 import ImageDisplayer from './ImageDisplayer';
-import DateSelector from './DateSelector';
-import DatePicker from 'react-datepicker';
+import QueryImageMenu from './QueryImageMenu';
 var moment = require('moment');
 
 require('react-datepicker/dist/react-datepicker.css');
@@ -119,44 +118,8 @@ class ImageMenu extends Component {
   render() {
      return (
         <div>
-          <div className="panel panel-default rightMenu">
-          <div className="panel-heading">
-            <h4>Query Images</h4>
-          </div>
-            <ul className="list-group">
-              <li className="list-group-item">
-              <form onSubmit={this.handleSubmit}>
-              <table>
-              <tbody>
-              <tr>
-                <td>Only last &ensp;</td>
-                <td><select value={this.state.limit} name="numberImages" onChange={this.handleChangeLimit}>
-                    <option value="1">1</option>
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="30">30</option>
-                    <option value="all">all</option>
-                    </select>
-                </td>
-              </tr>
-              <tr>
-                <td>Only from &ensp;
-                </td>
-                <td>
-                  <DateSelector dateSelection={this.state.queryMode} handler = {this.handleQueryMode} />
-                  { this.state.showPicker ?  <DatePicker
-                                                  onChange={(date) => this.handleChangeDatePicker(date)}
-                                                  selected={this.state.date}
-                                                  /> : null }
-                </td>
-              </tr>
-              </tbody>
-              </table>
-              <input type="submit" className="btn btn-info" value="Submit" />
-              </form>
-              </li>
-            </ul>
-        </div>
+        <QueryImageMenu limit={this.state.limit} queryMode={this.state.queryMode} showPicker={this.state.showPicker} date={this.state.date}
+        handleQueryMode={this.handleQueryMode} handleChangeDatePicker={this.handleChangeDatePicker} handleChangeLimit={this.handleChangeLimit} handleSubmit={this.handleSubmit}/>
 
         <ImageDisplayer images={this.state.images}
                         showPager={this.state.pagedSearch} numberOfItems={this.state.numberOfItems}
