@@ -2,7 +2,7 @@ create database if not exists picam_app;
 
 use picam_app;
 
-drop table image;
+drop table if exists image;
 
 create table if not exists image(
    id INT NOT NULL AUTO_INCREMENT,

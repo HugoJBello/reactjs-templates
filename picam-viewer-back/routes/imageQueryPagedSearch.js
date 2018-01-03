@@ -6,9 +6,9 @@ var fs = require('fs');
 const entriesPerPage=10;
 
 var con = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "3141592625",
+  host: "",
+  user: "",
+  password: "",
   database: "picam_app"
 });
 
@@ -59,10 +59,15 @@ router.get('/images_base64_paged/page=:page', function(req, res) {
 
 // function to encode file data to base64 encoded string
 function base64_encode(file) {
+  try {
     // read binary data
-    var bitmap = fs.readFileSync(file); 
+    var bitmap = fs.readFileSync(file);
     // convert binary data to base64 encoded string
     return new Buffer(bitmap).toString('base64');
+  } catch (err) {
+    return null;
+  }
+
 }
 
 module.exports = router;

@@ -4,9 +4,9 @@ var mysql = require('mysql');
 var fs = require('fs');
 
 var con = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "3141592625",
+  host: "",
+  user: "",
+  password: "",
   database: "picam_app"
 });
 
