@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getAccessToken } from './AuthService';
 
 //const BASE_URL = 'http://192.168.1.34:3333';
-const BASE_URL = 'http://localhost:3333';
+const BASE_URL = 'http://hjbello.hopto.org:3333';
 
 export {getListImages, last_images_base64, queryImagesBase64,
       queryImagesBase64Today, queryImagesBase64Date,

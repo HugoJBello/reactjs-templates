@@ -1,7 +1,7 @@
 const HtmlPlugin = require('html-webpack-plugin')
 module.exports = {
   // Tell webpack to start bundling our app at app/index.js
-  entry: './',
+  entry: './src',
   // Output our app to the dist/ directory
   output: {
     filename: 'app.js',

@@ -11,10 +11,14 @@ class ImageDisplayer extends Component {
   constructor(props){
     super(props);
     this.state = {imagesBase64: [],
-                  showGallery: false};
+                  showGallery: false,
+                  loading: true};
+   this.handleOnLoad = this.handleOnLoad.bind(this);
+
   }
-
-
+  componentDidMount= ()=> {
+    this.state.loading=false;
+  }
   extractBase64 = ()=>{
     const restResponseImages = this.props.images;
     const images = [];
@@ -25,11 +29,10 @@ class ImageDisplayer extends Component {
     }
     this.state.imagesBase64=images;
   }
-
+  handleOnLoad(event){
+    this.state.loading=false;
+  }
   render() {
-    if (this.props.loading) {
-      return <div>loading ...</div>;
-    } else {
     this.extractBase64();
     return (
         <div className="imageContainer">
@@ -39,7 +42,8 @@ class ImageDisplayer extends Component {
             <Tab>List</Tab>
           </TabList>
           <TabPanel>
-            { (this.props.images.length>0) ? <ImageGallery items={this.state.imagesBase64} /> : null }
+            { (this.state.loading) ? <div class="loader"></div> : null}
+            { (this.props.images.length>0) ? <ImageGallery items={this.state.imagesBase64} onLoad={this.handleOnLoad}/> : null }
           </TabPanel>
           <TabPanel>
             <ImageList images={this.props.images}/>
@@ -56,5 +60,5 @@ class ImageDisplayer extends Component {
     );
   }
 }
-}
+
 export default ImageDisplayer;

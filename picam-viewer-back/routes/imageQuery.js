@@ -9,7 +9,6 @@ var con = mysql.createConnection({
   password: "",
   database: "picam_app"
 });
-
 router.get('/get_list_images',(req,res) => {
     con.query("SELECT * FROM image", function (err, result, fields) {
       if (err) throw err;
@@ -90,10 +89,14 @@ router.get('/images_base64_today/limit=:limit/skip=:skip', function(req, res, ne
 
 // function to encode file data to base64 encoded string
 function base64_encode(file) {
+    try{
     // read binary data
     var bitmap = fs.readFileSync(file);
     // convert binary data to base64 encoded string
     return new Buffer(bitmap).toString('base64');
+    } catch (err) {
+      return null;
+    }
 }
 
 module.exports = router;
