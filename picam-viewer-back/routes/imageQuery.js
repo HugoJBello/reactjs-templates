@@ -3,12 +3,14 @@ var router = express.Router();
 var mysql = require('mysql');
 var fs = require('fs');
 
+
 var con = mysql.createConnection({
   host: "",
   user: "",
   password: "",
-  database: "picam_app"
+  database: ""
 });
+
 router.get('/get_list_images',(req,res) => {
     con.query("SELECT * FROM image", function (err, result, fields) {
       if (err) throw err;
