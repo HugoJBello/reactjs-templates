@@ -6,8 +6,8 @@ var fs = require('fs');
 const entriesPerPage=10;
 
 var con = mysql.createConnection({
-  host: "",
-  user: "",
+  host: "localhost",
+  user: "root",
   password: "",
   database: "picam_app"
 });
@@ -74,11 +74,11 @@ router.get('/images_base64_paged_files/page=:page', function(req, res) {
 });
 
 router.get('/images_base64_date_paged_files/day=:day/page=:page', function(req, res) {
-  if(req.params.page){
+ if((req.params.day!==undefined) && (req.params.page!==undefined)){
+  console.log("----------" + req.param.day)
     limit = entriesPerPage;
     offset = entriesPerPage*(req.params.page-1);
     con.query('SELECT * FROM image where date_taken LIKE  "'+ req.params.day +'%"  and id > ' + offset + " limit " + limit, function (err, result, fields) {
-      if (err) throw err;
       for (var i=0;i<result.length;i++){
         result[i].base64 = base64_encode(result[i].path);
       }
@@ -86,6 +86,8 @@ router.get('/images_base64_date_paged_files/day=:day/page=:page', function(req, 
       res.json(response);
     });
  } else {
+  console.log("----------" + req.params.day)
+
    res.json(null);
  }
 });
