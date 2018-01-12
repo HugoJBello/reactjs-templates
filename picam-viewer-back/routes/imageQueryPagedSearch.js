@@ -6,17 +6,17 @@ var fs = require('fs');
 const entriesPerPage=10;
 
 var con = mysql.createConnection({
-  host: "",
-  user: "",
+  host: "localhost",
+  user: "root",
   password: "",
-  database: "picam_app"
+  database: "picam_app" 
 });
 
 router.get('/images_base64_date_paged/day=:day/page=:page', function(req, res) {
     if(req.params.page &&  req.params.day){
       limit = entriesPerPage;
       offset = entriesPerPage*(req.params.page-1);
-      con.query('SELECT * FROM image where date_taken = "'+ req.params.day +'"  and id > ' + offset + " limit " + limit, function (err, result, fields) {
+      con.query('SELECT * FROM image where date_taken like "'+ req.params.day +'%"  and id > ' + offset + " limit " + limit, function (err, result, fields) {
         if (err) throw err;
         for (var i=0;i<result.length;i++){
           result[i].base64 = base64_encode(result[i].path);

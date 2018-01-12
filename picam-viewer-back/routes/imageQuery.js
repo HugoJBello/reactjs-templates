@@ -6,8 +6,8 @@ var fs = require('fs');
 
 
 var con = mysql.createConnection({
-  host: "",
-  user: "",
+  host: "localhost",
+  user: "root",
   password: "",
   database: "picam_app"
 });
@@ -61,11 +61,12 @@ router.get('/images_base64/limit=:limit/skip=:skip', function(req, res, next) {
 
 router.get('/images_base64_date/limit=:limit/skip=:skip/day=:day', function(req, res) {
     if(req.params.limit &&  req.params.day){
-      con.query('SELECT * FROM image where date_taken = "'+ req.params.day +'" limit ' + req.params.limit + " OFFSET " + req.params.skip, function (err, result, fields) {
+      con.query('SELECT * FROM image where date_taken LIKE "'+ req.params.day +'%" limit ' + req.params.limit + " OFFSET " + req.params.skip, function (err, result, fields) {
         if (err) throw err;
         for (var i=0;i<result.length;i++){
           result[i].base64 = base64_encode(result[i].path);
         }
+        console.log(result);
         res.json(result);
       });
    } else {
