@@ -39,8 +39,8 @@ class ImageMenu extends Component {
     }
 
   formatDate = (moment) => {
-    var dateMiliseconds = moment.toDate();
-    return dateMiliseconds.getFullYear() + '-' +(dateMiliseconds.getMonth() + 1) + '-' +  dateMiliseconds.getDate();
+    var date = new Date(moment.toDate());
+    return date.getFullYear() + '-' + ("0" + (date.getMonth() + 1)).slice(-2) + '-' +  ("0" + date.getDate()).slice(-2);
   }
 
   handleChangeLimit(event) {

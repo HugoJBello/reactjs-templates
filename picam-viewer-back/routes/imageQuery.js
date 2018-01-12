@@ -4,11 +4,12 @@ var mysql = require('mysql');
 var fs = require('fs');
 
 
+
 var con = mysql.createConnection({
   host: "",
   user: "",
   password: "",
-  database: ""
+  database: "picam_app"
 });
 
 router.get('/get_list_images',(req,res) => {
@@ -43,7 +44,7 @@ router.get('/images_base64/limit=:limit', function(req, res, next) {
 
 router.get('/images_base64/limit=:limit/skip=:skip', function(req, res, next) {
     if(req.params.limit && req.params.skip){
-      con.query("SELECT * FROM image limit " + req.params.limit + " OFFSET " + req.params.skip, function (err, result, fields) {
+      con.query("SELECT * FROM image order by date_taken desc limit " + req.params.limit + " OFFSET " + req.params.skip, function (err, result, fields) {
         if (err) {
           console.log(err);
           console.log("error in mysql");

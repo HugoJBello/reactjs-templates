@@ -6,8 +6,8 @@ var fs = require('fs');
 const entriesPerPage=10;
 
 var con = mysql.createConnection({
-  host: "localhost",
-  user: "root",
+  host: "",
+  user: "",
   password: "",
   database: "picam_app"
 });
