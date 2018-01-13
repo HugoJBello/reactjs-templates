@@ -2,15 +2,9 @@ var express = require('express');
 var router = express.Router();
 var mysql = require('mysql');
 var fs = require('fs');
+var con = require('../mysql_connection/connection');
 
 const entriesPerPage=10;
-
-var con = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "picam_app" 
-});
 
 router.get('/images_base64_date_paged/day=:day/page=:page', function(req, res) {
     if(req.params.page &&  req.params.day){

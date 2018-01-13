@@ -3,14 +3,7 @@ var router = express.Router();
 var mysql = require('mysql');
 var fs = require('fs');
 
-
-
-var con = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "picam_app"
-});
+var con = require('../mysql_connection/connection');
 
 router.get('/get_list_images',(req,res) => {
     con.query("SELECT * FROM image", function (err, result, fields) {
@@ -20,7 +13,7 @@ router.get('/get_list_images',(req,res) => {
 });
 
 router.get('/get_list_images/:limit', function(req, res, next) {
-    con.query("SELECT * FROM image order by date_taken limit " + req.params.limit, function (err, result, fields) {
+    con.query("SELECT * FROM image order by date_taken desc limit " + req.params.limit, function (err, result, fields) {
       if (err) {
         console.log(err);
         console.log("error in mysql");
@@ -30,7 +23,7 @@ router.get('/get_list_images/:limit', function(req, res, next) {
 });
 
 router.get('/images_base64/limit=:limit', function(req, res, next) {
-    con.query("SELECT * FROM image order by date_taken limit " + req.params.limit, function (err, result, fields) {
+    con.query("SELECT * FROM image order by date_taken desc limit " + req.params.limit, function (err, result, fields) {
       if (err) {
         console.log(err);
         console.log("error in mysql");
@@ -61,7 +54,7 @@ router.get('/images_base64/limit=:limit/skip=:skip', function(req, res, next) {
 
 router.get('/images_base64_date/limit=:limit/skip=:skip/day=:day', function(req, res) {
     if(req.params.limit &&  req.params.day){
-      con.query('SELECT * FROM image where date_taken LIKE "'+ req.params.day +'%" limit ' + req.params.limit + " OFFSET " + req.params.skip, function (err, result, fields) {
+      con.query('SELECT * FROM image where date_taken LIKE "'+ req.params.day +'%" order by date_taken desc limit ' + req.params.limit + " OFFSET " + req.params.skip, function (err, result, fields) {
         if (err) throw err;
         for (var i=0;i<result.length;i++){
           result[i].base64 = base64_encode(result[i].path);
@@ -76,7 +69,7 @@ router.get('/images_base64_date/limit=:limit/skip=:skip/day=:day', function(req,
 
 router.get('/images_base64_today/limit=:limit/skip=:skip', function(req, res, next) {
     if(req.params.limit && req.params.skip){
-      con.query("SELECT * FROM image where date_taken = curdate() limit " +req.params.limit + " OFFSET " + req.params.skip, function (err, result, fields) {
+      con.query("SELECT * FROM image where date_taken = curdate() order by date_taken desc limit " +req.params.limit + " OFFSET " + req.params.skip, function (err, result, fields) {
         if (err) {
           console.log(err);
           console.log("error in mysql");
