@@ -8,8 +8,8 @@ const entriesPerPage=10;
 
 router.get('/images_base64_date_paged/day=:day/page=:page', function(req, res) {
     if(req.params.page &&  req.params.day){
-      limit = entriesPerPage;
-      offset = entriesPerPage*(req.params.page-1);
+      var limit = entriesPerPage;
+      var offset = entriesPerPage*(req.params.page-1);
       con.query('SELECT * FROM image where date_taken like "'+ req.params.day +'%"  and id > ' + offset + " limit " + limit, function (err, result, fields) {
         if (err) throw err;
         for (var i=0;i<result.length;i++){
@@ -30,8 +30,8 @@ router.get('/images_base64_date_paged/day=:day/page=:page', function(req, res) {
 
 router.get('/images_base64_paged/page=:page', function(req, res) {
     if(req.params.page){
-      limit = entriesPerPage;
-      offset = entriesPerPage*(req.params.page-1);
+      var limit = entriesPerPage;
+      var offset = entriesPerPage*(req.params.page-1);
       con.query('SELECT * FROM image where id > ' + offset + " limit " + limit, function (err, result, fields) {
         if (err) throw err;
         for (var i=0;i<result.length;i++){
@@ -52,9 +52,9 @@ router.get('/images_base64_paged/page=:page', function(req, res) {
 
 router.get('/images_base64_paged_files/page=:page', function(req, res) {
   if(req.params.page){
-    limit = entriesPerPage;
-    offset = entriesPerPage*(req.params.page-1);
-    con.query('SELECT * FROM image where id > ' + offset + " limit " + limit, function (err, result, fields) {
+    var limit = entriesPerPage;
+    var offset = entriesPerPage*(req.params.page-1);
+    con.query('SELECT * FROM image order by date_taken desc limit ' +offset + ',' + limit, function (err, result, fields) {
       if (err) throw err;
       for (var i=0;i<result.length;i++){
         result[i].base64 = base64_encode(result[i].path);
@@ -69,44 +69,30 @@ router.get('/images_base64_paged_files/page=:page', function(req, res) {
 
 router.get('/images_base64_date_paged_files/day=:day/page=:page', function(req, res) {
  if((req.params.day!==undefined) && (req.params.page!==undefined)){
-    limit = entriesPerPage;
-    offset = entriesPerPage*(req.params.page-1);
-    con.query('SELECT * FROM image where date_taken LIKE  "'+ req.params.day +'%"  and id > ' + offset + " limit " + limit, function (err, result, fields) {
+    var limit = entriesPerPage;
+    var offset = entriesPerPage*(req.params.page-1);
+    console.log(offset);
+    con.query('SELECT * FROM image where date_taken LIKE  "'+ req.params.day +'%" order by date_taken desc limit ' +offset + ',' + limit, function (err, result, fields) {
       if (err) throw err;
       for (var i=0;i<result.length;i++){
-        result[i].base64 = base64_encode(result[i].path);
+        //result[i].base64 = base64_encode(result[i].path);
       }
       var response = result;
-      res.json(response); 
+      res.json(response);
+      console.log(response); 
     });
  } else {
-
    res.json(null);
  }
 });
 
-router.get('/images_base64_parameters/', function(req, res) { 
-      con.query('SELECT count(*) FROM image ', function (err, result, fields) {
-        response.numberOfPages = Math.floor(result[0]['count(*)']/entriesPerPage)+1;
-        response.numberOfItems = result[0]['count(*)'];
-        response.entriesPerPage = entriesPerPage;
-        res.json(response);
-      });
-});
-
 router.get('/image_recorded/:filename', function(req, res) { 
-  console.log("---------");  
   con.query('SELECT * FROM image where filename =  "'+ req.params.filename+'" limit 1', function (err, result, fields) {
       if (err) throw err;    
       try {
-        console.log(result[0]);  
-
         var file = result[0].path;
         // read binary data
         var bitmap = fs.readFileSync(file); 
-        console.log("---------");  
-
-        console.log(file); 
         // convert binary data to base64 encoded string
         res.contentType('image/jpeg');
         res.end(bitmap,"binary");
@@ -119,7 +105,19 @@ router.get('/image_recorded/:filename', function(req, res) {
 
 
 router.get('/images_base64_parameters_date/day=:day', function(req, res) { 
-  con.query('SELECT count(*) FROM image where date_taken LIKE "'+ req.params.day + '"%', function (err, result, fields) {
+  con.query('SELECT count(*) FROM image where date_taken LIKE "'+ req.params.day + '%"', function (err, result, fields) {
+    if (err) throw err;    
+    response={};
+    response.numberOfPages = Math.floor(result[0]['count(*)']/entriesPerPage)+1;
+    response.numberOfItems = result[0]['count(*)'];
+    response.entriesPerPage = entriesPerPage;
+    res.json(response);
+  });
+});
+
+router.get('/images_base64_parameters/', function(req, res) { 
+  con.query('SELECT count(*) FROM image', function (err, result, fields) {
+    response={};
     response.numberOfPages = Math.floor(result[0]['count(*)']/entriesPerPage)+1;
     response.numberOfItems = result[0]['count(*)'];
     response.entriesPerPage = entriesPerPage;
